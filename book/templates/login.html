@@ -1,0 +1,16 @@
+
+<fieldset style="width: 300px; height: 150px;">
+<div align="center">
+	      LOGIN
+
+	<form action="{% url 'loginuser' %}" method="POST" >{% csrf_token %}
+    <table>
+    <tr><td>{{form}}</td></tr>
+
+    </table>
+
+
+    <input type="submit" value="login" />
+  
+</div>
+</fieldset>

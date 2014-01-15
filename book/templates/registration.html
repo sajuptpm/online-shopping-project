@@ -1,0 +1,21 @@
+<fieldset style="width: 300px; height: 200px;">
+<div align="center">
+	      NEW USER REGISTRATION
+	<form action="{% url 'adduser' %}" method="POST" >{% csrf_token %}
+    <table>
+    <tr><td>{{form}}</td></tr>
+
+    </table>
+
+    <br>
+    <input type="submit" value="Submit" />
+  
+</div>
+</fieldset>
+
+
+
+
+
+
+
