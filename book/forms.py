@@ -8,12 +8,12 @@ class UserRegistrationForm(forms.Form):
 
 class LoginForm(forms.Form):
 
-	uname = forms.CharField(max_length=200, label=("Name:"))
+	uname = forms.CharField(max_length=300, label=("Name:"))
 	password = forms.CharField(max_length=30, label=("Password:"))
 
 class ProductForm(forms.Form):
 
-	pname=forms.CharField(max_length=200)
+	pname=forms.CharField(max_length=300)
 	discription=forms.CharField(max_length=500)
 	price=forms.IntegerField()
 	noitem=forms.IntegerField()
