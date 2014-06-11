@@ -39,6 +39,7 @@ urlpatterns = patterns('',
     url(r'^users/profile/$','book.views.profile_update', name='profileupdate'),
     url(r'^users/cart/$','book.views.my_cart', name='mycart'),
     url(r'^order/cancel/$','book.views.cancel_order', name='cancelorder'),
+    url(r'^products/delivary/$','book.views.products_delivery', name='productsdelivery'),
 
 
 

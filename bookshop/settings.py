@@ -86,6 +86,7 @@ STATIC_URL = '/static/'
 WSGI_APPLICATION = 'bookshop.wsgi.application'
 
 
+
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
@@ -105,7 +106,7 @@ MEDIA_URL = '/media/'#for photo upload
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
