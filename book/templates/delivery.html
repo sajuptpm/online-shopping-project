@@ -33,6 +33,19 @@
              <br>
              * Purchase Date :{{ carts.purdate }}
              <br>
+             
+             {% for users in user %}
+                 {% if us.id == carts.uid %}
+                    
+                     * Address :{{users.userprofile.address}}
+                     <br>
+                     Phone :{{users.phone}}
+                     <br>
+                 {% endif %}
+
+             {% endfor %}
+
+             <br>
 
              {% if carts.status == '1' %}
                  <p style="color:green;margin-left:20px;">* Delivery Status : Delivered</p>

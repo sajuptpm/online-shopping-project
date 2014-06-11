@@ -1,16 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
+
 from PIL import Image
 
 
 # Create your models here.
 
-#    user = models.OneToOneField(User)
-   # address = models.CharField(max_length=100)
-   # pincode = models.IntegerField()
-   # mobile = models.CharField(max_length=10)
-
-
+ 
+class UserProfile(models.Model):
+    user = models.OneToOneField(User)
+    address = models.CharField(max_length=100)
+    phone = models.IntegerField(max_length=10)
 
 class Catagory(models.Model):
 	cname=models.CharField(max_length=200)
@@ -32,3 +32,4 @@ class Cart(models.Model):
 	noitem=models.IntegerField()
 	purdate=models.DateTimeField("purchase-date")
 	deldate=models.DateTimeField("delivary-date")
+	status=models.CharField(max_length=10)

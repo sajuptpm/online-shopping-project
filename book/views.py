@@ -3,12 +3,14 @@ from django.shortcuts import redirect
 from book.models import Catagory
 from book.models import Product 
 from book.models import Cart
+from book.models import UserProfile
 from book.forms import UserRegistrationForm
 from book.forms import UserProfileUpdateForm
 from book.forms import ChangePasswordForm
 from book.forms import ProductForm
 from book.forms import OrderCancelForm
 from book.forms import CatagoryForm
+from book.forms import DeliveyStatusForm
 #from book.forms import PincodeForm
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -23,24 +25,9 @@ from django.utils import timezone
 from django.core.mail import send_mail
 
 
-#send_mail('Subject here', 'Here is the message.', 'sanu@gmail.com', ['sanuptpm@gmail.com'], fail_silently=False)
-
 def user_home(request):
     catagory=Catagory.objects.all()
-    #pincode = request.POST.get('pincode')
-    #if request.method == 'GET':
-        #form = PincodeForm()
-
-    #else:
-
-        #form = PincodeForm(request.POST)
-
-        #if form.is_valid():
-         #if pincode == "689695":
-             #print "Product available in your location"
-        #return redirect('/users/home')
-
-    return render(request,'home.html',{'catagory':catagory})#, 'form':form})
+    return render(request,'home.html',{'catagory':catagory})
 
 def about(request):
     return render(request,'about.html')
@@ -56,16 +43,21 @@ def add_user(request):
     password = request.POST.get("password")
     fname = request.POST.get("fname")
     lname = request.POST.get("lname")
+    address = request.POST.get("address")
+    phone = request.POST.get("phone")
+    print ".........address........",address
     if request.method == 'GET':
         form = UserRegistrationForm() #object creation
-
     else:
-        
-        user = User.objects.create_user(username, email, password)
-        user.first_name = fname
-        user.last_name = lname
-        user.save()
-        return redirect('/users/home')
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+              user = User.objects.create_user(username, email, password)
+              user.first_name = fname
+              user.last_name = lname
+              user.save()
+              a = UserProfile(user_id=user.id,address=address,phone=phone)
+              a.save()
+              return redirect('/users/home')
     return render(request, 'registration.html', {'form': form,})
 @login_required
 def user_account(request):
@@ -90,30 +82,22 @@ def change_password(request):
 
 @login_required
 def add_product(request):
-
     cid = request.POST.get("cname")
-    print "..........cname............",cid
-
     if request.method == 'GET':
         form = ProductForm()
-        #print "............GET.in................"
     else:
-
          form = ProductForm(request.POST, request.FILES)
-
-         if form.is_valid():
-                 
+         if form.is_valid():               
                  user=User.objects.get(pk=request.user.id)
-                 catagory=Catagory.objects.get(id = cid)
-             
+                 catagory=Catagory.objects.get(id = cid)        
                  p = Product(pname=request.POST.get("pname"),discription=request.POST.get("discription"),
                                 price=request.POST.get("price"),noitem=request.POST.get("noitem"),createdby=user,cid=catagory,
                                 photo=request.FILES['photo'])#save photo
                  p.save()
-                 return redirect('/users/account/')
-
-        
+                 return redirect('/users/account/')    
     return render(request, 'addproduct.html', {'form':form})
+
+
 @login_required
 def del_product(request):
     productname=Product.objects.all()
@@ -128,20 +112,18 @@ def del_product(request):
 
 @login_required
 def add_catagory(request):
-    cname=request.POST.get('cname')  
-    
+    cname=request.POST.get('cname')     
     if request.method == 'GET':
         form = CatagoryForm() 
     else:
          form = CatagoryForm(request.POST)
-
          if form.is_valid():
-
              u = User.objects.get(pk=request.user.id)
              #u=request.user.id
              u.catagory_set.create(cname=cname,purdate=timezone.now())
-             return redCKirect('/users/account/')
+             return redirect('/users/account/')
     return render(request, 'addcatagory.html', {'form': form})
+
 @login_required
 def del_catagory(request):
     catagoryname=Catagory.objects.all()
@@ -153,6 +135,7 @@ def del_catagory(request):
         catagory.delete()
         return redirect('/users/account/')
     return render(request, 'delcatagory.html', {'form': form, 'catagoryname':catagoryname})
+
 @login_required
 def details(request,products_id):
     user=User.objects.get(pk=request.user.id)
@@ -172,11 +155,14 @@ def details(request,products_id):
 def products_home(request,catagory_id):
     products=Product.objects.filter(cid=catagory_id)
     return render(request,'producthome.html',{'products':products})
+
 @login_required
 def profile_update(request):
     fname = request.POST.get("fname")
     lname = request.POST.get("lname")
     email = request.POST.get("emailid")
+    address = request.POST.get("address")
+    phone = request.POST.get("phone")
     username=request.user.username
     if request.method == 'GET':
         profile = UserProfileUpdateForm() #object creation
@@ -184,49 +170,69 @@ def profile_update(request):
     else:
          profile = UserProfileUpdateForm(request.POST)
          if profile.is_valid():
-
              user = User.objects.get(pk=request.user.id)
              user.first_name = fname
              user.last_name = lname
              user.email= email
              user.save()
+             usr = UserProfile.objects.get(user_id=request.user.id)
+             usr.address = address
+             usr.phone = phone
+             usr.save()
              return redirect('/users/account/')
     return render(request, 'profile.html', {'profile': profile,})
+    
+@login_required
+def personal_details(request):
+    user = User.objects.get(pk=request.user.id)
+    profile = UserProfile.objects.get(user_id=request.user.id)
+    return render(request, 'personaldetails.html', {'profile': profile,'user':user})
+
+
 @login_required
 def my_cart(request):
-
    # carts = Cart.objects.filter(uid = request.user.id).values()
-    carts = Cart.objects.filter(uid = request.user.id).values('pid','noitem','purdate')
+    carts = Cart.objects.filter(uid = request.user.id).values('pid','noitem','purdate','status')
     #print "........",type(carts)
     products=Product.objects.all()#filter(pk =c['pid'])
     #print "........uuu1uu......", carts[0]
     return render(request, 'mycart.html', {'carts': carts, 'products': products,})
-
+@login_required
 def cancel_order(request):
 
     cart = Cart.objects.filter(uid = request.user.id).values('pid','noitem','id')
     product=Product.objects.all()
-
     order = request.POST.get('oname')
-    print "............",order
-
     if request.method == 'GET':
         form = OrderCancelForm()
-
     else:
          form = OrderCancelForm(request.POST)
          if form.is_valid():
             cart = Cart.objects.get(id = order)
             cart.delete()
             return redirect('/users/account/')
-
-
     return render(request, 'cancelorder.html', {'cart': cart, 'product': product, 'form':form})
 
+@login_required
+def products_delivery(request):
+    cart = Cart.objects.all().values('id','uid','pid','noitem','purdate','status')
+    product=Product.objects.all()
+    userid = Cart.objects.all().values('uid')  
+    user = User.objects.all()
+    status = request.POST.get("status")
+    deliveryid = request.POST.get("deliveryid")
+    if request.method == 'GET':
+        form = DeliveyStatusForm()
+    else:
+         form = DeliveyStatusForm(request.POST)
+         if form.is_valid():
+             cartid = Cart.objects.get(id=deliveryid)          
+             cartid.status = status
+             cartid.save()
+             return redirect('/products/delivary/')
+    return render(request, 'delivery.html', {'cart': cart, 'product': product, 'form': form,'user':user})
 
 
-
-    
 
 
 

@@ -26,9 +26,6 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
-
-
 # Application definition
 
 #AUTHENTICATION_BACKENDS = (
@@ -39,11 +36,10 @@ ALLOWED_HOSTS = []
 EMAIL_HOST      = 'localhost'
 EMAIL_HOST_PASSWORD = ''
 EMAIL_HOST_USER = ''
-EMAIL_PORT      = 25
+EMAIL_PORT      = 1025
 EMAIL_USE_TLS   = False
 DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
 
 
 
@@ -84,8 +80,6 @@ STATIC_ROOT = '/home/saju/bookshop/book/static/'#for photo upload
 STATIC_URL = '/static/'
 
 WSGI_APPLICATION = 'bookshop.wsgi.application'
-
-
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
