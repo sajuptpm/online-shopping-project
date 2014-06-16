@@ -142,7 +142,6 @@ def details(request,products_id):
     product=Product.objects.filter(pk=products_id)
     pid=Product.objects.get(pk=products_id)
     item = request.POST.get("noitems")
-    #print "..............hai.....................",noitem,"......",user,"......",pid
     if request.method == 'POST':
         print "data added to cart"
         user.cart_set.create(uid = user,pid = pid,noitem = item,purdate = timezone.now(),deldate = timezone.now())
@@ -191,11 +190,9 @@ def personal_details(request):
 
 @login_required
 def my_cart(request):
-   # carts = Cart.objects.filter(uid = request.user.id).values()
     carts = Cart.objects.filter(uid = request.user.id).values('pid','noitem','purdate','status')
     #print "........",type(carts)
-    products=Product.objects.all()#filter(pk =c['pid'])
-    #print "........uuu1uu......", carts[0]
+    products=Product.objects.all()
     return render(request, 'mycart.html', {'carts': carts, 'products': products,})
 @login_required
 def cancel_order(request):

@@ -18,7 +18,6 @@ class Catagory(models.Model):
 	createdby=models.ForeignKey(User)
 
 class Product(models.Model):
-	
 	pname=models.CharField(max_length=200)
 	discription=models.CharField(max_length=500)
 	price=models.IntegerField()
@@ -26,6 +25,7 @@ class Product(models.Model):
 	createdby=models.ForeignKey(User)
 	cid=models.ForeignKey(Catagory)
 	photo=models.ImageField(upload_to='photo') #image in pjct/media/photo
+	
 class Cart(models.Model):
 	uid=models.ForeignKey(User)
 	pid=models.ForeignKey(Product)
