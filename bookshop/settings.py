@@ -33,14 +33,26 @@ ALLOWED_HOSTS = []
     #'survey.modelbackend.EmailBackend' # custom backend to authenticate using the email field
 #)
 
-EMAIL_HOST      = 'localhost'
-EMAIL_HOST_PASSWORD = ''
-EMAIL_HOST_USER = ''
-EMAIL_PORT      = 25
-EMAIL_USE_TLS   = False
-DEFAULT_FROM_EMAIL = 'webmaster@localhost'
+#test email link in terminal
+
+#EMAIL_HOST      = 'localhost'
+#EMAIL_HOST_PASSWORD = ''
+#EMAIL_HOST_USER = ''
+#EMAIL_PORT      = 1025
+#EMAIL_USE_TLS   = False
+#DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+#send email for forgot password 
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'username@gmail.com'
+EMAIL_HOST_PASSWORD = 'password'
+DEFAULT_FROM_EMAIL = 'sanuptpm20@gmail.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
 
